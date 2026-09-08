@@ -1,4 +1,4 @@
-# 👗 Rendada
+#Rendada
 
 **Moda circular, afeto regional.**
 *Desapegos com borogodó.*
@@ -7,7 +7,7 @@ App mobile de brechó desenvolvido em Flutter para a disciplina de Dispositivos 
 
 ---
 
-## 📱 Sobre o projeto
+## Sobre o projeto
 
 **Rendada** é um aplicativo para catalogar peças de roupa usada, acompanhar o status de cada venda e calcular o desconto em relação ao preço original — unindo referências visuais de marketplaces de moda modernos (Enjoei, Depop) com uma estética nordestina pensada para o público jovem feminino.
 
@@ -18,7 +18,7 @@ App mobile de brechó desenvolvido em Flutter para a disciplina de Dispositivos 
 - ✅ Protótipo de telas no Figma
 - ✅ Layout implementado em Flutter
 
-## 🎨 Identidade visual
+## Identidade visual
 
 | Elemento | Descrição |
 |---|---|
@@ -41,14 +41,14 @@ App mobile de brechó desenvolvido em Flutter para a disciplina de Dispositivos 
 | **Nova peça** | Cadastro de peça com fotos, categoria e tamanho |
 | **Detalhes** | Preço com desconto, seletor de tamanho e ação de marcar como vendida |
 
-## 🛠️ Tecnologias
+##Tecnologias
 
 - [Flutter](https://flutter.dev) & Dart
 - [google_fonts](https://pub.dev/packages/google_fonts) — fonte Bevan
 - API [ViaCEP](https://viacep.com.br) — consulta de endereço por CEP
 - Persistência local — *sqflite (em desenvolvimento)*
 
-## 📂 Estrutura do projeto
+##Estrutura do projeto
 
 ```
 lib/
@@ -62,7 +62,7 @@ lib/
     └── detalhe_peca_screen.dart
 ```
 
-## 🚀 Como rodar
+##Como rodar
 
 ```bash
 git clone https://github.com/MaryaAlexandre/Rendada.git
