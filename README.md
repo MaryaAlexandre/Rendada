@@ -26,13 +26,7 @@ App mobile de brechó desenvolvido em Flutter para a disciplina de Dispositivos 
 | Tipografia | [Bevan](https://fonts.google.com/specimen/Bevan) (estilo xilogravura) para títulos |
 | Linguagem | Expressões regionais como *"garimpar"*, *"flor"* e *"borogodó"* nos textos do app |
 
-## 🖼️ Telas
-
-<p align="center">
-  <img src="docs/screens/rendada_01_boas_vindas.svg" width="200" alt="Tela de boas-vindas"/>
-  <img src="docs/screens/rendada_02_feed.svg" width="200" alt="Tela de feed / meus achados"/>
-  <img src="docs/screens/rendada_03_detalhes.svg" width="200" alt="Tela de detalhes da peça"/>
-</p>
+## Telas
 
 | Tela | Descrição |
 |---|---|
@@ -41,14 +35,14 @@ App mobile de brechó desenvolvido em Flutter para a disciplina de Dispositivos 
 | **Nova peça** | Cadastro de peça com fotos, categoria e tamanho |
 | **Detalhes** | Preço com desconto, seletor de tamanho e ação de marcar como vendida |
 
-##Tecnologias
+## Tecnologias
 
 - [Flutter](https://flutter.dev) & Dart
 - [google_fonts](https://pub.dev/packages/google_fonts) — fonte Bevan
 - API [ViaCEP](https://viacep.com.br) — consulta de endereço por CEP
 - Persistência local — *sqflite (em desenvolvimento)*
 
-##Estrutura do projeto
+## Estrutura do projeto
 
 ```
 lib/
@@ -62,7 +56,7 @@ lib/
     └── detalhe_peca_screen.dart
 ```
 
-##Como rodar
+## Como rodar
 
 ```bash
 git clone https://github.com/MaryaAlexandre/Rendada.git
