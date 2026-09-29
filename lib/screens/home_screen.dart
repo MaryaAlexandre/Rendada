@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../models/peca.dart';
 import 'nova_peca_screen.dart';
 import 'detalhe_peca_screen.dart';
+import 'favoritos_screen.dart';
+import 'perfil_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,30 +25,46 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final crossAxisCount = width >= 900 ? 4 : (width >= 600 ? 3 : 2);
+    final aspectRatio = width >= 600 ? 0.85 : 0.72;
+    final hPad = width >= 600 ? 32.0 : 16.0;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              padding: EdgeInsets.fromLTRB(hPad, 12, hPad, 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Rendada', style: GoogleFonts.bevan(fontSize: 22, color: const Color(0xFFC1502E))),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.flutter_dash, size: 20, color: Color(0xFF7A2E2E)),
+                        const SizedBox(width: 4),
+                        Text('Rendada', style: GoogleFonts.bevan(fontSize: 22, color: const Color(0xFFC1502E))),
+                        const SizedBox(width: 2),
+                        const Icon(Icons.auto_awesome, size: 14, color: Color(0xFFF0A202)),
+                      ],
+                    ),
+                  ),
                   const Icon(Icons.notifications_none, color: Color(0xFF7A2E2E)),
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Align(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: const Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Oi, flor! Bora garimpar hoje?', style: TextStyle(fontSize: 13, color: Color(0xFF8A7B6C))),
               ),
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: hPad),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Garimpar peça...',
@@ -63,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 12),
               color: const Color(0xFF2A9D8F),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,9 +97,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Align(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: hPad),
+              child: const Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Meus achados', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF3A2A1F))),
               ),
@@ -91,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 34,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: hPad),
                 itemCount: categorias.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 8),
                 itemBuilder: (context, i) {
@@ -110,13 +128,19 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(horizontal: hPad, vertical: 16),
                 itemCount: pecas.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: 0.72),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount, mainAxisSpacing: 12, crossAxisSpacing: 12, childAspectRatio: aspectRatio),
                 itemBuilder: (context, index) {
                   final peca = pecas[index];
                   final vendida = peca.status == 'vendida';
+                  final paleta = [
+                    (const Color(0xFFFBE4E8), const Color(0xFFC23A55)), // rosa
+                    (const Color(0xFFFCE9C7), const Color(0xFF8A5A02)), // mostarda
+                    (const Color(0xFFE0F2EF), const Color(0xFF2A9D8F)), // turquesa
+                  ];
+                  final (corFundo, corTexto) = paleta[index % paleta.length];
                   return GestureDetector(
                     onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetalhePecaScreen(peca: peca))),
                     child: Column(
@@ -135,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   top: 6, left: 6,
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(color: const Color(0xFFFBE4E8), borderRadius: BorderRadius.circular(6)),
-                                    child: Text('-${peca.percentualDesconto}%', style: const TextStyle(fontSize: 11, color: Color(0xFFC23A55))),
+                                    decoration: BoxDecoration(color: corFundo, borderRadius: BorderRadius.circular(6)),
+                                    child: Text('-${peca.percentualDesconto}%', style: TextStyle(fontSize: 11, color: corTexto)),
                                   ),
                                 ),
                               if (vendida)
@@ -145,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(color: const Color(0xFFEDEDE8), borderRadius: BorderRadius.circular(6)),
-                                    child: const Text('vendida', style: TextStyle(fontSize: 11, color: Color(0xFF8A8A85))),
+                                    child: const Text('Essa já voou!', style: TextStyle(fontSize: 10, color: Color(0xFF8A8A85))),
                                   ),
                                 ),
                               Positioned(
@@ -192,12 +216,18 @@ class _HomeScreenState extends State<HomeScreen> {
         notchMargin: 8,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
-            Icon(Icons.home, color: Color(0xFFC1502E)),
-            Icon(Icons.search, color: Color(0xFFB8AB98)),
-            SizedBox(width: 40),
-            Icon(Icons.favorite_border, color: Color(0xFFB8AB98)),
-            Icon(Icons.person_outline, color: Color(0xFFB8AB98)),
+          children: [
+            const Icon(Icons.home, color: Color(0xFFC1502E)),
+            const Icon(Icons.search, color: Color(0xFFB8AB98)),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.favorite_border, color: Color(0xFFB8AB98)),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritosScreen())),
+            ),
+            IconButton(
+              icon: const Icon(Icons.person_outline, color: Color(0xFFB8AB98)),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PerfilScreen())),
+            ),
           ],
         ),
       ),

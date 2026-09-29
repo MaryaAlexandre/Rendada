@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'home_screen.dart';
+import 'cadastro_screen.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -76,7 +76,7 @@ class OnboardingScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(26)),
                 ),
                 onPressed: () => Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (_) => const HomeScreen())),
+                    context, MaterialPageRoute(builder: (_) => const CadastroScreen())),
                 child: const Text('Bora garimpar!', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
