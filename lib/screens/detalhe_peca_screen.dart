@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/peca.dart';
+import '../stores/favoritos_store.dart';
 import '../theme/app_colors.dart';
 import 'fale_com_vendedora_screen.dart';
 
@@ -86,7 +88,7 @@ class _Cabecalho extends StatelessWidget {
             child: const Center(child: Icon(Icons.checkroom, size: 64, color: AppColors.bordo)),
           ),
           Positioned(top: 16, left: 16, child: _botaoCirculo(context, Icons.arrow_back, AppColors.texto)),
-          Positioned(top: 16, right: 16, child: _botaoCirculo(context, Icons.favorite_border, AppColors.terracota)),
+          Positioned(top: 16, right: 16, child: _BotaoFavoritoTopo(peca: peca)),
         ],
       ),
     );
@@ -95,7 +97,7 @@ class _Cabecalho extends StatelessWidget {
   Widget _botaoCirculo(BuildContext context, IconData icon, Color cor) {
     return InkWell(
       customBorder: const CircleBorder(),
-      onTap: icon == Icons.arrow_back ? () => Navigator.pop(context) : null,
+      onTap: () => Navigator.pop(context),
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
@@ -233,12 +235,7 @@ class _Rodape extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: AppColors.bege)),
-            child: const Icon(Icons.favorite_border, color: AppColors.bordo),
-          ),
+          _BotaoFavoritoRodape(peca: peca),
           const SizedBox(width: 10),
           Expanded(
             child: ElevatedButton(
@@ -250,7 +247,7 @@ class _Rodape extends StatelessWidget {
               ),
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => FaleComVendedoraScreen(nomePeca: peca.nome)),
+                MaterialPageRoute(builder: (_) => FaleComVendedoraScreen(peca: peca)),
               ),
               child: const Text('Falar com a vendedora', overflow: TextOverflow.ellipsis),
             ),
@@ -261,3 +258,52 @@ class _Rodape extends StatelessWidget {
   }
 }
 
+/// ---------------- Favorito (estado compartilhado) ----------------
+// topo
+class _BotaoFavoritoTopo extends StatelessWidget {
+  final Peca peca;
+  const _BotaoFavoritoTopo({required this.peca});
+
+  @override
+  Widget build(BuildContext context) {
+    final favorita = context.watch<FavoritosStore>().isFavorita(peca);
+    return InkWell(
+      customBorder: const CircleBorder(),
+      onTap: () => context.read<FavoritosStore>().alternar(peca),
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        child: Icon(favorita ? Icons.favorite : Icons.favorite_border, size: 18, color: AppColors.terracota),
+      ),
+    );
+  }
+}
+
+// rodapé
+class _BotaoFavoritoRodape extends StatelessWidget {
+  final Peca peca;
+  const _BotaoFavoritoRodape({required this.peca});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FavoritosStore>(
+      builder: (context, store, _) {
+        final favorita = store.isFavorita(peca);
+        return InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () => store.alternar(peca),
+          child: Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: favorita ? AppColors.terracota : Colors.transparent,
+              border: Border.all(color: favorita ? AppColors.terracota : AppColors.bege),
+            ),
+            child: Icon(favorita ? Icons.favorite : Icons.favorite_border, color: favorita ? Colors.white : AppColors.bordo),
+          ),
+        );
+      },
+    );
+  }
+}

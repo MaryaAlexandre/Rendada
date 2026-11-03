@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/onboarding_screen.dart';
+import 'stores/favoritos_store.dart';
 
-void main() => runApp(const RendadaApp());
+void main() {
+  runApp(
+    // provider global
+    ChangeNotifierProvider(
+      create: (_) => FavoritosStore(),
+      child: const RendadaApp(),
+    ),
+  );
+}
 
 class RendadaApp extends StatelessWidget {
   const RendadaApp({super.key});

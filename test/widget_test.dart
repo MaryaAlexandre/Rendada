@@ -1,30 +1,21 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:rendada/main.dart';
+import 'package:rendada/models/peca.dart';
+import 'package:rendada/stores/favoritos_store.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('FavoritosStore alterna e notifica', () {
+    final store = FavoritosStore();
+    final peca = Peca(nome: 'Vestido floral', categoria: 'Vestido', tamanho: 'M', preco: 45);
+    var notificacoes = 0;
+    store.addListener(() => notificacoes++);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    store.alternar(peca);
+    expect(store.isFavorita(peca), isTrue);
+    expect(store.total, 1);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    store.alternar(peca);
+    expect(store.isFavorita(peca), isFalse);
+    expect(store.total, 0);
+    expect(notificacoes, 2);
   });
 }
