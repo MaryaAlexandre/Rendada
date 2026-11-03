@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/peca.dart';
+import '../stores/favoritos_store.dart';
 import '../theme/app_colors.dart';
 
 /// Atividade 2: tela interativa cobrindo os 5 tipos de evento pedidos.
 class FaleComVendedoraScreen extends StatefulWidget {
-  final String nomePeca;
-  const FaleComVendedoraScreen({super.key, this.nomePeca = 'Vestido floral'});
+  final Peca peca;
+  const FaleComVendedoraScreen({super.key, required this.peca});
 
   @override
   State<FaleComVendedoraScreen> createState() => _FaleComVendedoraScreenState();
@@ -13,7 +16,6 @@ class FaleComVendedoraScreen extends StatefulWidget {
 class _FaleComVendedoraScreenState extends State<FaleComVendedoraScreen> {
   final _controller = TextEditingController();
   String _mensagem = '';
-  bool _favoritada = false;
 
   bool get _mensagemValida => _mensagem.trim().length >= 10;
 
@@ -64,20 +66,22 @@ class _FaleComVendedoraScreenState extends State<FaleComVendedoraScreen> {
   // evento 4a: gesto simples
   void _aoTocarNaPeca() {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${widget.nomePeca} · toque simples'), duration: const Duration(seconds: 1)),
+      SnackBar(content: Text('${widget.peca.nome} · toque simples'), duration: const Duration(seconds: 1)),
     );
   }
 
   // evento 4b: gesto longo -> resposta diferente do toque
   void _aoSegurarNaPeca() {
-    setState(() => _favoritada = !_favoritada);
+    final store = context.read<FavoritosStore>();
+    store.alternar(widget.peca);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(_favoritada ? 'Adicionada aos favoritos!' : 'Removida dos favoritos.')),
+      SnackBar(content: Text(store.isFavorita(widget.peca) ? 'Adicionada aos favoritos!' : 'Removida dos favoritos.')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final favoritada = context.watch<FavoritosStore>().isFavorita(widget.peca);
     return Scaffold(
       appBar: AppBar(title: const Text('Fale com a vendedora')),
       body: Padding(
@@ -93,14 +97,14 @@ class _FaleComVendedoraScreenState extends State<FaleComVendedoraScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.bege,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: _favoritada ? AppColors.terracota : Colors.transparent, width: 2),
+                  border: Border.all(color: favoritada ? AppColors.terracota : Colors.transparent, width: 2),
                 ),
                 child: Row(
                   children: [
                     const Icon(Icons.checkroom, color: AppColors.bordo),
                     const SizedBox(width: 10),
-                    Expanded(child: Text(widget.nomePeca)),
-                    Icon(_favoritada ? Icons.favorite : Icons.favorite_border, color: AppColors.terracota),
+                    Expanded(child: Text(widget.peca.nome)),
+                    Icon(favoritada ? Icons.favorite : Icons.favorite_border, color: AppColors.terracota),
                   ],
                 ),
               ),
@@ -142,4 +146,3 @@ class _FaleComVendedoraScreenState extends State<FaleComVendedoraScreen> {
     );
   }
 }
-

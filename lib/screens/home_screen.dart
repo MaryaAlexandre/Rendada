@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../models/peca.dart';
+import '../stores/favoritos_store.dart';
 import 'nova_peca_screen.dart';
 import 'detalhe_peca_screen.dart';
 import 'favoritos_screen.dart';
@@ -174,11 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               Positioned(
                                 top: 6, right: 6,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-                                  child: const Icon(Icons.favorite_border, size: 12, color: Color(0xFFC1502E)),
-                                ),
+                                child: _CoracaoCard(peca: peca),
                               ),
                             ],
                           ),
@@ -220,9 +218,19 @@ class _HomeScreenState extends State<HomeScreen> {
             const Icon(Icons.home, color: Color(0xFFC1502E)),
             const Icon(Icons.search, color: Color(0xFFB8AB98)),
             const SizedBox(width: 40),
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Color(0xFFB8AB98)),
-              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritosScreen())),
+            // contador reativo
+            Consumer<FavoritosStore>(
+              builder: (context, store, _) => IconButton(
+                icon: Badge(
+                  isLabelVisible: store.total > 0,
+                  label: Text('${store.total}'),
+                  child: Icon(
+                    store.total > 0 ? Icons.favorite : Icons.favorite_border,
+                    color: store.total > 0 ? const Color(0xFFC1502E) : const Color(0xFFB8AB98),
+                  ),
+                ),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritosScreen())),
+              ),
             ),
             IconButton(
               icon: const Icon(Icons.person_outline, color: Color(0xFFB8AB98)),
@@ -230,6 +238,25 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// coração do card
+class _CoracaoCard extends StatelessWidget {
+  final Peca peca;
+  const _CoracaoCard({required this.peca});
+
+  @override
+  Widget build(BuildContext context) {
+    final favorita = context.watch<FavoritosStore>().isFavorita(peca);
+    return GestureDetector(
+      onTap: () => context.read<FavoritosStore>().alternar(peca),
+      child: Container(
+        padding: const EdgeInsets.all(4),
+        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        child: Icon(favorita ? Icons.favorite : Icons.favorite_border, size: 12, color: const Color(0xFFC1502E)),
       ),
     );
   }
