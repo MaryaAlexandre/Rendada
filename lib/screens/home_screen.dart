@@ -7,6 +7,7 @@ import 'nova_peca_screen.dart';
 import 'detalhe_peca_screen.dart';
 import 'favoritos_screen.dart';
 import 'perfil_screen.dart';
+import 'consulta_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -53,7 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  const Icon(Icons.notifications_none, color: Color(0xFF7A2E2E)),
+                  // garimpo online
+                  IconButton(
+                    tooltip: 'Garimpo online',
+                    icon: const Icon(Icons.cloud_outlined, color: Color(0xFF7A2E2E)),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ConsultaScreen())),
+                  ),
                 ],
               ),
             ),
