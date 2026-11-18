@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../stores/auth_store.dart';
 import '../theme/app_colors.dart';
 import '../models/usuario_atual.dart';
 import 'favoritos_screen.dart';
 import 'historico_vendas_screen.dart';
 import 'configuracoes_screen.dart';
-import 'onboarding_screen.dart';
+import 'login_screen.dart';
 
 class PerfilScreen extends StatelessWidget {
   const PerfilScreen({super.key});
@@ -95,8 +97,13 @@ class PerfilScreen extends StatelessWidget {
             _menu(context, icon: Icons.settings_outlined, label: 'Configurações',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ConfiguracoesScreen()))),
             _menu(context, icon: Icons.logout, label: 'Sair', corTexto: AppColors.descTxt,
-                onTap: () => Navigator.pushAndRemoveUntil(
-                    context, MaterialPageRoute(builder: (_) => const OnboardingScreen()), (route) => false)),
+                onTap: () async {
+                  // apaga o token
+                  final navigator = Navigator.of(context);
+                  await context.read<AuthStore>().sair();
+                  navigator.pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
+                }),
           ],
         ),
       ),
